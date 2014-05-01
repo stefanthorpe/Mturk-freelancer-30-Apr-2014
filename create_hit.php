@@ -1,11 +1,11 @@
 <?php
     require_once(__DIR__.'/Turk50/Turk50.php');
 
-    if (!empty(_POST)) {
+    if (!empty($_POST)) {
         $AWSAccessKeyId = "AWSAccessKeyIdHere";
         $AWSSecretAccessKeyId = "AWSSecretAccessKeyIdHere";
 
-        $turk50 = new Turk50(AWSAccessKeyId, AWSSecretAccessKeyId);
+        $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
 
         //prepare Question
         $Question = '<Question>
@@ -15,7 +15,7 @@
             <QuestionContent>
               <Text>
                 I need someone to post a RELEVANT comment on this forum thread:'.
-                $_POST['forumURL'].'
+                $_POST["forumURL"].'
                 Do not post anything short like "Great post!" or "I agree!" - this needs to be relevant content that a person on the forum would actually post.
               </Text>
             </QuestionContent>
