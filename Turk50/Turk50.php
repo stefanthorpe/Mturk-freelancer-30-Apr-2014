@@ -2,27 +2,27 @@
 
     /**
      * @author David J. Malan <dmalan@harvard.edu>
-     * @link http://wiki.cs50.net/Turk50
+     * @link https://wiki.cs50.net/Turk50
      * @package Turk50
      * @version 1.0
      *
      * Creative Commons Attribution-ShareAlike 3.0 Unported License
-     * http://creativecommons.org/licenses/by-sa/3.0/
+     * https://creativecommons.org/licenses/by-sa/3.0/
      */
 
     class Turk50
     {
         // production endpoint
-        const PRODUCTION = "http://mechanicalturk.amazonaws.com/";
+        const PRODUCTION = "https://mechanicalturk.amazonaws.com/";
 
         // sandbox endpoint
-        const SANDBOX = "http://mechanicalturk.sandbox.amazonaws.com/";
+        const SANDBOX = "https://mechanicalturk.sandbox.amazonaws.com/";
 
         // service
         const SERVICE = "AWSMechanicalTurkRequester";
 
         // WSDL
-        const WSDL = "http://mechanicalturk.amazonaws.com/AWSMechanicalTurk/AWSMechanicalTurkRequester.wsdl";
+        const WSDL = "https://mechanicalturk.amazonaws.com/AWSMechanicalTurk/AWSMechanicalTurkRequester.wsdl";
 
         /* Access Key ID */
         private $AWSAccessKeyId;
@@ -96,7 +96,7 @@
 
         /**
          * Invokes AWSMechanicalTurkRequester operations (and local SoapClient
-         * methods, per http://php.net/manual/en/class.soapclient.php).
+         * methods, per https://php.net/manual/en/class.soapclient.php).
          *
          * @param name       operation (or local method) to invoke
          * @param arguments  operation's (or local method's) arguments
@@ -133,7 +133,7 @@
          * Calculates SHA1 HMAC.
          *
          * Adapted from 
-         * http://docs.amazonwebservices.com/AWSMechanicalTurkGettingStartedGuide/2006-10-31/MakingARequest.html.
+         * https://docs.amazonwebservices.com/AWSMechanicalTurkGettingStartedGuide/2006-10-31/MakingARequest.html.
          *
          * @param key  secret access key
          * @param $s   string to hash
