@@ -8,7 +8,8 @@
         $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
 
         //prepare Question
-        $Question = '<Question>
+        $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
+        <Question>
             <QuestionIdentifier>forumComment</QuestionIdentifier>
             <DisplayName>Comment Relating A Forum</DisplayName>
             <IsRequired>true</IsRequired>
@@ -26,7 +27,8 @@
                   </Constraints>
                 </FreeTextAnswer>
             </AnswerSpecification>
-          </Question>';
+          </Question>
+          </QuestionForm>';
           
         //prepare Request
         $Request = array(

@@ -22,7 +22,7 @@
         const SERVICE = "AWSMechanicalTurkRequester";
 
         // WSDL
-        const WSDL = "https://mechanicalturk.amazonaws.com/AWSMechanicalTurk/AWSMechanicalTurkRequester.wsdl";
+        const WSDL = "http://mechanicalturk.amazonaws.com/AWSMechanicalTurk/AWSMechanicalTurkRequester.wsdl";
 
         /* Access Key ID */
         private $AWSAccessKeyId;
