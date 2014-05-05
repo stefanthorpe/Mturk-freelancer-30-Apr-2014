@@ -2,7 +2,7 @@
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
 
-        $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId, array("trace" => TRUE);
+        $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
 
         // require Worker_PercentAssignmentsApproved >= 90%
         $Worker_PercentAssignmentsApproved = array(
@@ -24,5 +24,5 @@
 
         // invoke CreateHIT
         $RegResponse = $turk50->RegisterHITType($Request);
-        echo ($RegResponse['HITTypeId'];
+        echo ($RegResponse['HITTypeId']);
 ?>
