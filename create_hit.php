@@ -2,6 +2,7 @@
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
 
+
    if (!empty($_POST)) {
 
         $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
@@ -31,19 +32,14 @@
           
         //prepare Request
         $Request = array(
-         "Title" => "Forum Comment",
-         "Description" => "Draft a comment for a forum thread",
+         "HITTypeId" => "3SJ5GB440G78X7LNWVFO7IHWBXP4Q1",
          "Question" => $Question,
-         "Reward" => array("Amount" => "1.00", "CurrencyCode" => "USD"),
-         "AssignmentDurationInSeconds" => "60",
-         "LifetimeInSeconds" => "172800",
          "MaxAssignments" => "3",
-         "AutoApprovalDelayInSeconds" => "43200",
-         "RequesterAnnotation" => $_POST["forumURL"],
-         "QualificationRequirement" => $QualificationRequirement
+         "RequesterAnnotation" => $_POST["forumURL"]
         );
 
         // invoke CreateHIT
         $CreateHITResponse = $turk50->CreateHIT($Request);
+        
     }
 ?>
