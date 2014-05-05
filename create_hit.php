@@ -1,9 +1,8 @@
 <?php
     require_once(__DIR__.'/Turk50/Turk50.php');
+    include(__DIR__.'/aws-credentials.php');
 
-    if (!empty($_POST)) {
-        $AWSAccessKeyId = "AWSAccessKeyIdHere";
-        $AWSSecretAccessKeyId = "AWSSecretAccessKeyIdHere";
+   if (!empty($_POST)) {
 
         $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
 
