@@ -35,6 +35,7 @@
          "HITTypeId" => "3SJ5GB440G78X7LNWVFO7IHWBXP4Q1",
          "Question" => $Question,
          "MaxAssignments" => "3",
+         "LifetimeInSeconds" => "172800",
          "RequesterAnnotation" => $_POST["forumURL"]
         );
 

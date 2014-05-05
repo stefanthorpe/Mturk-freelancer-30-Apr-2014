@@ -1,4 +1,4 @@
-Mturk-freelancer-30-Apr-2014
+Mturk-freelancer-30-Apr-2014 set
 ============================
 
 This project creates a sequence of Hits for Mturk.
