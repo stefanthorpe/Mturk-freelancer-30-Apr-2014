@@ -38,6 +38,9 @@
          "Reward" => array("Amount" => "1.00", "CurrencyCode" => "USD"),
          "AssignmentDurationInSeconds" => "60",
          "LifetimeInSeconds" => "172,800",
+         "MaxAssignments" => "3",
+         "AutoApprovalDelayInSeconds" => "43,200",
+         "RequesterAnnotation" => $_POST["forumURL"],
          "QualificationRequirement" => $QualificationRequirement
         );
 
