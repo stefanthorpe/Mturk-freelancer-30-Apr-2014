@@ -4,10 +4,10 @@
 
 // Creates a HitType and prints new ID
 
-    $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId, array("trace" => TRUE));
+    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk", array("trace" => TRUE));
         
     $Notification = array(
-        "Destination" => "Sqs End point",
+        "Destination" => $queueUrl,
         "Transport" => "SQS",
         "Version" => "2006-05-05",
         "EventType" => "HITReviewable",
