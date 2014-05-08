@@ -4,6 +4,7 @@
 
     //Replaces the default keys with user inputted keys
     function updateKey ($keyName) {
+	global $keys;
         if (!empty($_POST[$keyName])) {
             $keys[$keyName] = $_POST[$keyName];
         }
@@ -14,7 +15,6 @@
         updateKey("AWSSecretAccessKeyId");
         updateKey("AWSAccessKeyIdMturk");
         updateKey("AWSSecretAccessKeyIdMturk");
-            
 
         $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
 
