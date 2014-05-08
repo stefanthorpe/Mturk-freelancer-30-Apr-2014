@@ -26,7 +26,7 @@
 
         //prepare Request
         $Request = array(
-         "HITId" => $HITId
+         "HITId" => $HITId,
          "AssignmentStatus" => "Approved"
         );
 
