@@ -32,6 +32,6 @@
 
         // invoke CreateHIT
         $RegResponse = $turk50->GetAssignmentsForHIT($Request);
-        echo ($RegResponse['HITTypeId'];
+        echo ($RegResponse['HITTypeId']);
    }
 ?>
