@@ -6,8 +6,8 @@
     use Aws\Sqs\SqsClient;
     
     $client = SqsClient::factory(array(
-        "key" => $AWSAccessKeyId,
-        "secret" => $AWSSecretAccessKeyId,
+        "key" => $Keys["AWSAccessKeyId"],
+        "secret" => $keys["AWSSecretAccessKeyId"],
         "region" => "us-west-1"
     ));
     
@@ -24,7 +24,7 @@
         
     function checkHITCompleted ($HITId) {
 
-        $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
+        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
 
         //prepare Request
         $Request = array(

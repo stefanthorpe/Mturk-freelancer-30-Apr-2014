@@ -2,10 +2,21 @@
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
 
+    //Replaces the default keys with user inputted keys
+    function updateKey ($keyName) {
+        if (!empty($_POST[$keyName])) {
+            $keys[$keyName] = $_POST[$keyName];
+        }
+    }
 
    if (!empty($_POST)) {
+        updateKey("AWSAccessKeyId");
+        updateKey("AWSSecretAccessKeyId");
+        updateKey("AWSAccessKeyIdMturk");
+        updateKey("AWSSecretAccessKeyIdMturk");
+            
 
-        $turk50 = new Turk50($AWSAccessKeyId, $AWSSecretAccessKeyId);
+        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
 
         //prepare Question
         $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
@@ -43,4 +54,5 @@
         $CreateHITResponse = $turk50->CreateHIT($Request);
         
     }
+  
 ?>
