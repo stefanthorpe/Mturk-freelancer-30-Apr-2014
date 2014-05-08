@@ -10,9 +10,7 @@
         "secret" => $keys["AWSSecretAccessKeyId"],
         "region" => "us-west-1"
     ));
-    
-    $queueUrl = "Input the Queue end point";
-    
+           
     $result = $client->receiveMessage(array(
         "QueueUrl" => $queueUrl
     ));
