@@ -4,7 +4,7 @@
 
 // Creates a HitType and prints new ID
 
-    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk", array("trace" => TRUE));
+    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
         
     $Notification = array(
         "Destination" => $queueUrl,
