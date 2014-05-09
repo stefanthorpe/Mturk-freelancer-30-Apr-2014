@@ -22,6 +22,6 @@
     
     $SetNotificationresponse = $turk50->SetHITTypeNotification($request);
     $LastResponse = $turk50->__getLastResponse();
-    print($LastResponse["HITTypeId"]); 
+    print($LastResponse); 
 
 ?>

@@ -1,25 +1,26 @@
 <?php
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
-    require(__DIR__.'vendor/autoload.php');
+    require(__DIR__.'/vendor/autoload.php');
     
     use Aws\Sqs\SqsClient;
     
     $client = SqsClient::factory(array(
-        "key" => $Keys["AWSAccessKeyId"],
+        "key" => $keys["AWSAccessKeyId"],
         "secret" => $keys["AWSSecretAccessKeyId"],
-        "region" => "us-west-1"
+        "region" => "ap-northeast-1"
     ));
-           
+
     $result = $client->receiveMessage(array(
         "QueueUrl" => $queueUrl
     ));
 
     foreach ($result->getPath('Messages/*/Body') as $messageBody) {
         // Find HITId in body and check all assignments complete
-        echo $messageBody;
+        $decodedMessageBody = json_decode($messageBody);
     }
-        
+    var_dump($decodedMessageBody);
+
     function checkHITCompleted ($HITId) {
 
         $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
