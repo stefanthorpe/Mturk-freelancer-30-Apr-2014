@@ -18,21 +18,31 @@
     foreach ($result->getPath('Messages/*/Body') as $messageBody) {
         // Find HITId in body and check all assignments complete
         $decodedMessageBody = json_decode($messageBody);
-    }
-    var_dump($decodedMessageBody);
+    };
 
-    function checkHITCompleted ($HITId) {
+    $HITId = $decodedMessageBody->Events[0]->HITId;
 
-        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
+        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
 
         //prepare Request
         $Request = array(
-         "HITId" => $HITId,
-         "AssignmentStatus" => "Approved"
+         "HITId" => $HITId
         );
 
         // invoke CreateHIT
         $RegResponse = $turk50->GetAssignmentsForHIT($Request);
-        echo ($RegResponse['HITTypeId']);
-   }
+	echo "<br />";
+	print_r($RegResponse);
+	echo "<br />";
+
+	$totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
+	print($totalNumResults);
+	$assignmentCount = 0;
+
+	while ($assignmentCount < $totalNumResults) {
+		print($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+		echo "<br />";
+		$assignmentCount++;
+	}
+	
 ?>

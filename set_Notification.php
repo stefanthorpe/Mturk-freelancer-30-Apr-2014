@@ -10,8 +10,7 @@
         "Destination" => $queueUrl,
         "Transport" => "SQS",
         "Version" => "2006-05-05",
-        "EventType" => "HITReviewable",
-        "EventType" => "HITExpired"
+	"EventType" => array("HITExpired", "HITReviewable")
      );
         
     $request = array(
@@ -19,9 +18,12 @@
         "Notification" => $Notification,
         "Active" => TRUE
     );
-    
+
     $SetNotificationresponse = $turk50->SetHITTypeNotification($request);
     $LastResponse = $turk50->__getLastResponse();
+    echo "<br /> The Last Request was:<br />";
+    print($turk50->__getLastRequest());
+    echo "<br /> The Last Response was:<br />";
     print($LastResponse); 
 
 ?>
