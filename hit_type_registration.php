@@ -4,7 +4,7 @@
 
 // Creates a HitType and prints new ID
 
-        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
+        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
 
         // require Worker_PercentAssignmentsApproved >= 90%
         $Worker_PercentAssignmentsApproved = array(
@@ -26,6 +26,12 @@
 
         // invoke CreateHIT
         $RegResponse = $turk50->RegisterHITType($Request);
-        $LastResponse = $turk50->__getLastResponse();
-        print($LastResponse["HITTypeId"]);
+	if ($RegResponse->RegisterHITTypeResult){
+		echo "<h1>This is your new HIT Type Id:</h1>";
+		print($RegResponse->RegisterHITTypeResult->HITTypeId);
+	}
+	else{
+		echo "You requested failed please see detailed response below<br />";
+		print_r($RegResponse);
+	}
 ?>
