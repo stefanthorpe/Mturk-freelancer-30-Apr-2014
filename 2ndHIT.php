@@ -35,14 +35,52 @@
 	print_r($RegResponse);
 	echo "<br />";
 
+    $splitComment = explode(" ", $RegResponse->GetAssignmentsForHITResult->Assignment[0]->Answer, 2);
+    
+    $questionText = "These three choices are comments in response to the question written at this Traffic Planet forum page:/n"
+    .$splitComment[0]."/n Please choose which comment is the most RELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:/n";
+    
 	$totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
 	print($totalNumResults);
 	$assignmentCount = 0;
 
 	while ($assignmentCount < $totalNumResults) {
-		print($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
-		echo "<br />";
+	    $answer = explode(" ", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
+		$questionText .= "Comment ".$assignmentCount + 1;
+		$questionText .= "/n>".$answer[1];
+		$questionText .= "/n/n";
 		$assignmentCount++;
 	}
 	
+	$Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
+        <Question>
+            <QuestionIdentifier>Review</QuestionIdentifier>
+            <DisplayName>Review Forum Comment</DisplayName>
+            <IsRequired>true</IsRequired>
+            <QuestionContent>
+              <Text>
+               '.$questionText.'
+              </Text>
+            </QuestionContent>
+            <AnswerSpecification>
+                <FreeTextAnswer>
+                  <Constraints>
+                    <Length minLength="1" maxLength="1"/>
+                  </Constraints>
+                </FreeTextAnswer>
+            </AnswerSpecification>
+          </Question>
+          </QuestionForm>';
+          
+        //prepare Request
+        $Request = array(
+         "HITTypeId" => "new type id",
+         "Question" => $Question,
+         "MaxAssignments" => "2",
+         "LifetimeInSeconds" => "172800",
+         "RequesterAnnotation" => $_POST["forumURL"]
+        );
+
+        // invoke CreateHIT
+        $CreateHITResponse = $turk50->CreateHIT($Request);
 ?>

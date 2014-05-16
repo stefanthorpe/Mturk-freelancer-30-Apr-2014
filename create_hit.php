@@ -21,7 +21,7 @@
         //prepare Question
         $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
         <Question>
-            <QuestionIdentifier>forumComment</QuestionIdentifier>
+            <QuestionIdentifier>Comment for'.$_POST["forumURL"].'</QuestionIdentifier>
             <DisplayName>Comment Relating A Forum</DisplayName>
             <IsRequired>true</IsRequired>
             <QuestionContent>
@@ -45,7 +45,7 @@
         $Request = array(
          "HITTypeId" => "3SJ5GB440G78X7LNWVFO7IHWBXP4Q1",
          "Question" => $Question,
-         "MaxAssignments" => "3",
+         "MaxAssignments" => "2",
          "LifetimeInSeconds" => "172800",
          "RequesterAnnotation" => $_POST["forumURL"]
         );
