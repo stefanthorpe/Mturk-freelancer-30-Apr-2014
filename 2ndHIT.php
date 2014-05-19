@@ -1,4 +1,4 @@
-<?php
++<?php
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
     require(__DIR__.'/vendor/autoload.php');
@@ -67,11 +67,23 @@ $questionText;
               </Text>
             </QuestionContent>
             <AnswerSpecification>
-                <FreeTextAnswer>
-                  <Constraints>
-                    <Length minLength="1" maxLength="1"/>
-                  </Constraints>
-                </FreeTextAnswer>
+                <SelectionAnswer>
+                  <StyleSuggestion>radiobutton</StyleSuggestion>
+                  <Selections>
+                    <Selection>
+                      <SelectionIdentifier>Comment1</SelectionIdentifier>
+                      <Text>Comment 1</Text>
+                    </Selection>
+                    <Selection>
+                      <SelectionIdentifier>Comment2</SelectionIdentifier>
+                      <Text>Comment 2</Text>
+                    </Selection>
+                    <Selection>
+                      <SelectionIdentifier>Comment3</SelectionIdentifier>
+                      <Text>Comment 3</Text>
+                    </Selection>
+                  </Selections>  
+                </SelectionAnswer>
             </AnswerSpecification>
           </Question>
           </QuestionForm>';
