@@ -31,27 +31,31 @@
 
         // invoke CreateHIT
         $RegResponse = $turk50->GetAssignmentsForHIT($Request);
-	echo "<br />";
-	print_r($RegResponse);
-	echo "<br />";
+//	echo "<br />";
+//	print_r($RegResponse);
+//	echo "<br />";
 
     $splitComment = explode(" ", $RegResponse->GetAssignmentsForHITResult->Assignment[0]->Answer, 2);
     
-    $questionText = "These three choices are comments in response to the question written at this Traffic Planet forum page:/n"
-    .$splitComment[0]."/n Please choose which comment is the most RELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:/n";
+    $questionText = 'These three choices are comments in response to the question written at this Traffic Planet forum page. Please choose which comment is the most RELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:
+';
     
 	$totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
 	print($totalNumResults);
 	$assignmentCount = 0;
-
+//print_r($RegResponse);
 	while ($assignmentCount < $totalNumResults) {
-	    $answer = explode(" ", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
-		$questionText .= "Comment ".$assignmentCount + 1;
-		$questionText .= "/n>".$answer[1];
-		$questionText .= "/n/n";
+	$xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+	print_r($xml);
+	    $answer = explode(">", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
+		$questionText .= "Comment ";
+		$questionText .= $assignmentCount + 1;
+		$questionText .= ":" . $xml->Answer->FreeText;
+		$questionText .= '
+';
 		$assignmentCount++;
 	}
-	
+$questionText;	
 	$Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
         <Question>
             <QuestionIdentifier>Review</QuestionIdentifier>
@@ -71,10 +75,10 @@
             </AnswerSpecification>
           </Question>
           </QuestionForm>';
-          
+//print $Question;
         //prepare Request
         $Request = array(
-         "HITTypeId" => "new type id",
+         "HITTypeId" => "3H63IRCKX3GKJ5IKZ7A1UD8NUG18E4",
          "Question" => $Question,
          "MaxAssignments" => "2",
          "LifetimeInSeconds" => "172800",
@@ -83,4 +87,5 @@
 
         // invoke CreateHIT
         $CreateHITResponse = $turk50->CreateHIT($Request);
+print_r($CreateHITResponse);
 ?>
