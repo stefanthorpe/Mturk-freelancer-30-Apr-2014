@@ -34,7 +34,7 @@
             <AnswerSpecification>
                 <FreeTextAnswer>
                   <Constraints>
-                    <Length minLength="10" maxLength="10"/>
+                    <Length minLength="10"/>
                   </Constraints>
                 </FreeTextAnswer>
             </AnswerSpecification>
