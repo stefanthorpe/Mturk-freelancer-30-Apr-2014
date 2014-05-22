@@ -14,11 +14,20 @@
     $result = $client->receiveMessage(array(
         "QueueUrl" => $queueUrl
     ));
-
+//var_dump($result);
     foreach ($result->getPath('Messages/*/Body') as $messageBody) {
         // Find HITId in body and check all assignments complete
         $decodedMessageBody = json_decode($messageBody);
     };
+//	var_dump($decodedMessageBody);
+
+	echo "<br/>";
+
+$resultArray = $result->toArray();
+print_r($resultArray);
+echo "<br/>";
+$receiptHandle = $resultArray['Messages'][0]['ReceiptHandle'];
+print_r($receiptHandle);
 
     $HITId = $decodedMessageBody->Events[0]->HITId;
 
@@ -58,9 +67,11 @@
 		    $questionText .= '
                                  ';
             $answerText .= '  <Selection>
-                          <SelectionIdentifier>Comment'.$assignmentCount + 1;
+                          <SelectionIdentifier>Comment';
+	    $answerText .= $assignmentCount + 1;
             $answerText .= '</SelectionIdentifier>
-                          <Text>Comment ' .$assignmentCount + 1;
+                          <Text>Comment ';
+	    $answerText .= $assignmentCount + 1;
             $answerText .= '</Text>
                         </Selection>
                         ';
@@ -70,6 +81,7 @@
         $answerText .= '</Selections>  
                     </SelectionAnswer>
                     ';
+//print($answerText);
 	    $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
             <Question>
                 <QuestionIdentifier>Review</QuestionIdentifier>
@@ -97,6 +109,12 @@
 
             // invoke CreateHIT
             $CreateHITResponse = $turk50->CreateHIT($Request);
-    print_r($CreateHITResponse);
+    //print_r($CreateHITResponse);
     };
+
+$deleteMessage = $client->deleteMessage(array(
+	"QueueUrl" => $queueUrl,
+	"ReceiptHandle" => $receiptHandle
+  ));
 ?>
+
