@@ -26,9 +26,8 @@
             <IsRequired>true</IsRequired>
             <QuestionContent>
               <FormattedContent><![CDATA[
-                <p>I need someone to post a RELEVANT comment on this forum thread:</p>
-                    <a href="'.$_POST["forumURL"].'">.$_POST["forumURL"].</a>
-                <p>Do not post anything short like "Great post!" or "I agree!" - this needs to be relevant content that a person on the forum would actually post.</p>
+                <p>I need someone to post a RELEVANT comment on this forum thread:<a href="'.$_POST["forumURL"].'">'.$_POST["forumURL"].'</a><br/>
+                Do not post anything short like "Great post!" or "I agree!" - this needs to be relevant content that a person on the forum would actually post.</p>
               ]]></FormattedContent>
             </QuestionContent>
             <AnswerSpecification>
@@ -52,7 +51,8 @@
 
         // invoke CreateHIT
         $CreateHITResponse = $turk50->CreateHIT($Request);
-        
+        print_r($CreateHITResponse);
+
     }
   
 ?>

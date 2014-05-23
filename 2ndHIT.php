@@ -26,10 +26,17 @@
     $resultArray = $result->toArray();
     //print_r($resultArray);
     echo "<br/>";
-$receiptHandle = $resultArray['Messages'][0]['ReceiptHandle'];
-print_r($receiptHandle);
+	$receiptHandle = $resultArray['Messages'][0]['ReceiptHandle'];
+	//print_r($receiptHandle);
 
     $HITId = $decodedMessageBody->Events[0]->HITId;
+    $MessageHITTypeId = $decodedMessageBody->Events[0]->HITTypeId;
+	echo "<br />";
+	print($MessageHITTypeId);
+	echo "<br />";
+	print($HITTypeId1);
+
+	if ($MessageHITTypeId = $HITTypeId1) {
 
         $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
 
@@ -40,7 +47,7 @@ print_r($receiptHandle);
 
         // invoke CreateHIT
         $RegResponse = $turk50->GetAssignmentsForHIT($Request);
-//	echo "<br />";
+	echo "<br />";
 //	print_r($RegResponse);
 //	echo "<br />";
     $totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
@@ -59,7 +66,7 @@ print_r($receiptHandle);
     //print_r($RegResponse);
 	    while ($assignmentCount < $totalNumResults) {
 	    $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
-	    print_r($xml);
+	  // print_r($xml);
 	        $answer = explode(">", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
 		    $questionText .= "Comment ";
 		    $questionText .= $assignmentCount + 1;
@@ -111,10 +118,10 @@ print_r($receiptHandle);
             $CreateHITResponse = $turk50->CreateHIT($Request);
     //print_r($CreateHITResponse);
     };
-
-$deleteMessage = $client->deleteMessage(array(
-	"QueueUrl" => $queueUrl,
-	"ReceiptHandle" => $receiptHandle
-  ));
+  };
+//$deleteMessage = $client->deleteMessage(array(
+//	"QueueUrl" => $queueUrl,
+//	"ReceiptHandle" => $receiptHandle
+//  ));
 ?>
 

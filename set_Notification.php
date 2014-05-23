@@ -14,7 +14,7 @@
      );
         
     $request = array(
-        "HITTypeId" => "3SJ5GB440G78X7LNWVFO7IHWBXP4Q1",
+        "HITTypeId" => $HITTypeId1,
         "Notification" => $Notification,
         "Active" => TRUE
     );
