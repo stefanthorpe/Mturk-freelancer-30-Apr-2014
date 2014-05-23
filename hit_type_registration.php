@@ -19,8 +19,8 @@
          "Description" => "Draft a comment for a forum thread",
          "Reward" => array("Amount" => "1.00", "CurrencyCode" => "USD"),
          "AssignmentDurationInSeconds" => "60",
-         "LifetimeInSeconds" => "172800",
-         "AutoApprovalDelayInSeconds" => "43200",
+         "LifetimeInSeconds" => "7200",
+         "AutoApprovalDelayInSeconds" => "1200",
          "QualificationRequirement" => $Worker_PercentAssignmentsApproved
         );
 

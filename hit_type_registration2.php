@@ -15,12 +15,12 @@
           
         //prepare Request
         $Request = array(
-         "Title" => "Forum Comments Hit 2",
+         "Title" => "Review Forum Comments",
          "Description" => "Review a comment for a forum thread",
-         "Reward" => array("Amount" => "1.00", "CurrencyCode" => "USD"),
-         "AssignmentDurationInSeconds" => "60",
-         "LifetimeInSeconds" => "172800",
-         "AutoApprovalDelayInSeconds" => "43200",
+         "Reward" => array("Amount" => "0.25", "CurrencyCode" => "USD"),
+         "AssignmentDurationInSeconds" => "30",
+         "LifetimeInSeconds" => "7200",
+         "AutoApprovalDelayInSeconds" => "1200",
          "QualificationRequirement" => $Worker_PercentAssignmentsApproved
         );
 

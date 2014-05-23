@@ -14,18 +14,18 @@
     $result = $client->receiveMessage(array(
         "QueueUrl" => $queueUrl
     ));
-//var_dump($result);
+    //var_dump($result);
+
     foreach ($result->getPath('Messages/*/Body') as $messageBody) {
         // Find HITId in body and check all assignments complete
         $decodedMessageBody = json_decode($messageBody);
     };
-//	var_dump($decodedMessageBody);
+    //	var_dump($decodedMessageBody);
+	//echo "<br/>";
 
-	echo "<br/>";
-
-$resultArray = $result->toArray();
-print_r($resultArray);
-echo "<br/>";
+    $resultArray = $result->toArray();
+    //print_r($resultArray);
+    echo "<br/>";
 $receiptHandle = $resultArray['Messages'][0]['ReceiptHandle'];
 print_r($receiptHandle);
 
@@ -100,10 +100,10 @@ print_r($receiptHandle);
     //print $Question;
             //prepare Request
             $Request = array(
-             "HITTypeId" => "3H63IRCKX3GKJ5IKZ7A1UD8NUG18E4",
+             "HITTypeId" => $HITTypeId2,
              "Question" => $Question,
-             "MaxAssignments" => "2",
-             "LifetimeInSeconds" => "172800",
+             "MaxAssignments" => "1",
+             "LifetimeInSeconds" => "7200",
              "RequesterAnnotation" => $_POST["forumURL"]
             );
 
