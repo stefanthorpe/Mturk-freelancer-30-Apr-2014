@@ -7,8 +7,8 @@
     $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
         
     $Notification = array(
-        "Destination" => $Email,
-        "Transport" => "Email",
+        "Destination" => $queueUrl,
+        "Transport" => "SQS",
         "Version" => "2006-05-05",
 	"EventType" => array("HITExpired", "HITReviewable")
      );

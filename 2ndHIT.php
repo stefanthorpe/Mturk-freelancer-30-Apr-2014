@@ -2,6 +2,7 @@
     require_once(__DIR__.'/Turk50/Turk50.php');
     include(__DIR__.'/aws-credentials.php');
     require(__DIR__.'/vendor/autoload.php');
+    require(__DIR__.'/vendor/phpmailer/phpmailer/PHPMailerAutoload.php');
     
     use Aws\Sqs\SqsClient;
     
@@ -31,9 +32,10 @@
 
     $HITId = $decodedMessageBody->Events[0]->HITId;
     $MessageHITTypeId = $decodedMessageBody->Events[0]->HITTypeId;
-//	echo "<br />";
-//	print($MessageHITTypeId);
-
+	echo "<br />";
+	print($MessageHITTypeId);
+echo "<br />";
+print($HITTypeId2);
     $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
 
      //prepare Request
@@ -46,8 +48,8 @@
 //  print_r($RegResponse);
 //  echo "<br />";
 
-	if ($MessageHITTypeId = $HITTypeId1) {
-
+	if ($MessageHITTypeId == $HITTypeId1) {
+	echo "hit one loop";
         // invoke CreateHIT
 
         $totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
@@ -65,17 +67,22 @@
 	        $assignmentCount = 0;
     //      print_r($RegResponse);
 	        while ($assignmentCount < $totalNumResults) {
-	            $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+	           if ($totalNumResults = 1){ 
+			$xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+		}else{
+			 $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+		}
     //          print_r($xml);
 	            $answer = explode(">", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
 		        $questionText .= "Comment ";
 		        $questionText .= $assignmentCount + 1;
-		        $questionText .= ":" . $xml->Answer->FreeText;
+		        $questionText .= ": " . $xml->Answer->FreeText;
 		        $questionText .= '
                                      ';
                 $answerText .= '  <Selection>
                               <SelectionIdentifier>Comment';
 	            $answerText .= $assignmentCount + 1;
+		$answerText .= ": " . $xml->Answer->FreeText;
                 $answerText .= '</SelectionIdentifier>
                               <Text>Comment ';
 	            $answerText .= $assignmentCount + 1;
@@ -119,9 +126,34 @@
             $CreateHITResponse = $turk50->CreateHIT($Request);
     //      print_r($CreateHITResponse);
         };
-    } elseif($MessageHITTypeId = $HITTypeId2) {
-         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
-    //          print_r($xml);
+    } elseif($MessageHITTypeId == $HITTypeId2) {
+         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+//       print_r($xml);
+	$mail = new PHPMailer;
+// $mail->SMTPDebug = 2;
+$mail->isSMTP();                                     
+$mail->Host = 'smtp.gmail.com';  
+$mail->SMTPAuth = true;                               // Enable SMTP authentication
+$mail->Username = 'stefan.thorpe@gmail.com';                 // SMTP username
+$mail->Password = $emailPassword;                           // SMTP password
+$mail->Port = 587;
+$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+
+$mail->From = 'stefan.thorpe@gmail.com';
+$mail->FromName = 'Stefan Thorpe';
+$mail->addAddress('stefan.thorpe@gmail.com');     // Add a recipient
+
+$mail->Subject = 'Here is the subject';
+$mail->Body    = 'The forum comment for ';
+$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+if(!$mail->send()) {
+    echo 'Message could not be sent.';
+    echo 'Mailer Error: ' . $mail->ErrorInfo;
+} else {
+    echo 'Message has been sent';
+}
+	
     };
 
 
