@@ -79,8 +79,9 @@
                           ';
 	        $assignmentCount = 0;
     //      print_r($RegResponse);
-	        while ($assignmentCount < $totalNumAssignment) {
-	           if ($totalNumAssignment > 1){ 
+	        if ($totalNumAssignment > 1){
+	            while ($assignmentCount < $totalNumAssignment) {
+	            
 			         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
 
 //                   print_r($xml);
@@ -100,7 +101,7 @@
                                 </Selection>
                                 ';
 		            $assignmentCount++;
-	        
+                }	        
         
                     $answerText .= '</Selections>  
                         </SelectionAnswer>
@@ -147,7 +148,7 @@
                         echo 'Message has been sent';
                     }   
     		    }
-		    }
+		    
         }else{
             $mail->Subject = 'Your first HIT expired';
             $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed comments. The URL was '.$postURL;
