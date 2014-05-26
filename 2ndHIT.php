@@ -5,7 +5,7 @@
     require(__DIR__.'/vendor/phpmailer/phpmailer/PHPMailerAutoload.php');
   
     $mail = new PHPMailer;
-    // $mail->SMTPDebug = 2;
+// $mail->SMTPDebug = 2;
     $mail->isSMTP();                                     
     $mail->Host = 'smtp.gmail.com';  
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -60,10 +60,10 @@
 
     $HIT = $turk50->GetHIT($Request);
     $postURL = $HIT->HIT->RequesterAnnotation;
-    
+    print_r($HIT);
     $assignmentResponse = $turk50->GetAssignmentsForHIT($Request);
 //	echo "<br />";
-//  print_r($RegResponse);
+//  print_r($assignmentResponse);
 
 	if ($MessageHITTypeId == $HITTypeId1) {
 
@@ -78,18 +78,18 @@
                           <Selections>
                           ';
 	        $assignmentCount = 0;
-    //      print_r($RegResponse);
+    //      print_r($assignmentResponse);
 	        if ($totalNumAssignment > 1){
 	            while ($assignmentCount < $totalNumAssignment) {
 	            
-			         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+			         $xml =simplexml_load_string($assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
 
 //                   print_r($xml);
     //	            $answer = explode(">",$assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
 		            $questionText .= "Comment ";
 		            $questionText .= $assignmentCount + 1;
-		            $questionText .= ":<br /> " . $xml->Answer->FreeText;
-		            $questionText .= '<br />';
+		            $questionText .= ':<br /> "' . $xml->Answer->FreeText;
+		            $questionText .= '"<br />';
                     $answerText .= '  <Selection>
                                   <SelectionIdentifier>Comment';
 	                $answerText .= $assignmentCount + 1;
@@ -106,14 +106,17 @@
                     $answerText .= '</Selections>  
                         </SelectionAnswer>
                         ';
-    //      print($answerText);
+  //        print($answerText);
+//	echo "<br />";
+//	print($questionText);
+
 	                $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
                 <Question>
                     <QuestionIdentifier>Review</QuestionIdentifier>
                     <DisplayName>Review Forum Comment</DisplayName>
                     <IsRequired>true</IsRequired>
                     <QuestionContent>
-                     FormattedContent><![CDATA[
+                     <FormattedContent><![CDATA[
                        '.$questionText.'</p>
                       ]]></FormattedContent>
                     </QuestionContent>
@@ -122,7 +125,7 @@
                     </AnswerSpecification>
                   </Question>
                   </QuestionForm>';
-    //      print $Question;
+//          print $Question;
 
             //prepare Request
                 $Request = array(
@@ -130,16 +133,17 @@
                      "Question" => $Question,
                      "MaxAssignments" => "1",
                      "LifetimeInSeconds" => "7200",
-                     "RequesterAnnotation" => $_POST["forumURL"]
+                     "RequesterAnnotation" => $postURL
                 );
 
                 // invoke CreateHIT
                 $CreateHITResponse = $turk50->CreateHIT($Request);
-        //      print_r($CreateHITResponse);                
+              print_r($CreateHITResponse);                
 	            }else {
-                    $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+                    $xml =simplexml_load_string($assignmentResponse->GetAssignmentsForHITResult->Assignment->Answer);
+		print_r($xml);
                 	$mail->Subject = 'Your first HIT expired';
-                    $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
+                    $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. <br /><br />The URL is '.$postURL. '.<br /><br />The comment is "'.$xml->Answer->FreeText.'".';
                     $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
 		            if(!$mail->send()) {
                         echo 'Message could not be sent.';
@@ -162,13 +166,15 @@
        }
             
     }elseif($MessageHITTypeId == $HITTypeId2) {
-         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
-//       print_r($xml);
+         $xml =simplexml_load_string($assignmentResponse->GetAssignmentsForHITResult->Assignment->Answer);
 
+	
+       if ($xml != ""){
+    $finalComment = explode(":",$xml->Answer->SelectionIdentifier, 2);
 
         $mail->Subject = 'New Comment For Forum';
-        $mail->Body    = 'The mechanical turk process has completed. The URL is '.$postURL.' . The selected comment is ' . $xml->Answer->FreeText;
-        $mail->AltBody = 'The mechanical turk process has completed. The URL is '.$postURL.' . The selected comment is ' . $xml->Answer->FreeText;
+        $mail->Body    = 'The mechanical turk process has completed.<br><br>The URL is '.$postURL.' .<br><br> The selected comment is:<br><br> "' . $finalComment[1].'".';
+        $mail->AltBody = 'The mechanical turk process has completed. The URL is '.$postURL.' . The selected comment is ' . $finalComment[1];
 
         if(!$mail->send()) {
             echo 'Message could not be sent.';
@@ -177,7 +183,30 @@
             echo 'Message has been sent';
         }
 	
-    };
+	}else{
+		$xml = simplexml_load_string($HIT->HIT->Question);
+		echo "<br>start of xml<br>";
+		print_r($xml);
+		echo "<br> end of xml";
+		print ($xml->Question->AnswerSpecification->SelectionAnswer->Selections->Selection[0]->SelectionIdentifier);
+		$mail->Subject = 'New Comment For Forum';
+        $mail->Body    = 'The mechanical turk process did not completed. No comment was selected.<br><br>The URL is '.$postURL.'. The comments are:<br>';
+	$mail->Body  .= $xml->Question->AnswerSpecification->SelectionAnswer->Selections->Selection[0]->SelectionIdentifier.'<br><br>';
+	$mail->Body  .= $xml->Question->AnswerSpecification->SelectionAnswer->Selections->Selection[1]->SelectionIdentifier.'<br><br>';
+	if ($xml->Question->AnswerSpecification->SelectionAnswer->Selections->Selection[2]->SelectionIdentifier){
+		$mail->Body  .= $xml->Question->AnswerSpecification->SelectionAnswer->Selections->Selection[2]->SelectionIdentifier.'<br><br>';
+	}
+        $mail->AltBody = 'The mechanical turk process did not completed. No comment was selected.<br><br>The URL is '.$postURL.'.';
+
+        if(!$mail->send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+            echo 'Message has been sent';
+        }
+
+	}  
+  };
 
 
 //  $deleteMessage = $client->deleteMessage(array(
