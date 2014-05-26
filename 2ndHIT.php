@@ -207,9 +207,9 @@
   };
 
 
-//  $deleteMessage = $client->deleteMessage(array(
-//	"QueueUrl" => $queueUrl,
-//	"ReceiptHandle" => $receiptHandle
-//  ));
+  $deleteMessage = $client->deleteMessage(array(
+	"QueueUrl" => $queueUrl,
+	"ReceiptHandle" => $receiptHandle
+  ));
 ?>
 
