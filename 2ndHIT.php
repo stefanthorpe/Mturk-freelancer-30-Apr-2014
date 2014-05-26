@@ -84,29 +84,29 @@
 			         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
 
 //                   print_r($xml);
-//	            $answer = explode(">",$assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
-		        $questionText .= "Comment ";
-		        $questionText .= $assignmentCount + 1;
-		        $questionText .= ":<br /> " . $xml->Answer->FreeText;
-		        $questionText .= '<br />';
-                $answerText .= '  <Selection>
-                              <SelectionIdentifier>Comment';
-	            $answerText .= $assignmentCount + 1;
-		        $answerText .= ": " . $xml->Answer->FreeText;
-                $answerText .= '</SelectionIdentifier>
-                              <Text>Comment ';
-	            $answerText .= $assignmentCount + 1;
-                $answerText .= '</Text>
-                            </Selection>
-                            ';
-		        $assignmentCount++;
-	        }
+    //	            $answer = explode(">",$assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
+		            $questionText .= "Comment ";
+		            $questionText .= $assignmentCount + 1;
+		            $questionText .= ":<br /> " . $xml->Answer->FreeText;
+		            $questionText .= '<br />';
+                    $answerText .= '  <Selection>
+                                  <SelectionIdentifier>Comment';
+	                $answerText .= $assignmentCount + 1;
+		            $answerText .= ": " . $xml->Answer->FreeText;
+                    $answerText .= '</SelectionIdentifier>
+                                  <Text>Comment ';
+	                $answerText .= $assignmentCount + 1;
+                    $answerText .= '</Text>
+                                </Selection>
+                                ';
+		            $assignmentCount++;
+	        
         
-            $answerText .= '</Selections>  
+                    $answerText .= '</Selections>  
                         </SelectionAnswer>
                         ';
     //      print($answerText);
-	        $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
+	                $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
                 <Question>
                     <QuestionIdentifier>Review</QuestionIdentifier>
                     <DisplayName>Review Forum Comment</DisplayName>
@@ -124,30 +124,30 @@
     //      print $Question;
 
             //prepare Request
-            $Request = array(
-                 "HITTypeId" => $HITTypeId2,
-                 "Question" => $Question,
-                 "MaxAssignments" => "1",
-                 "LifetimeInSeconds" => "7200",
-                 "RequesterAnnotation" => $_POST["forumURL"]
-            );
+                $Request = array(
+                     "HITTypeId" => $HITTypeId2,
+                     "Question" => $Question,
+                     "MaxAssignments" => "1",
+                     "LifetimeInSeconds" => "7200",
+                     "RequesterAnnotation" => $_POST["forumURL"]
+                );
 
-            // invoke CreateHIT
-            $CreateHITResponse = $turk50->CreateHIT($Request);
-    //      print_r($CreateHITResponse);
-	       }else {
-                                $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
-            	            $mail->Subject = 'Your first HIT expired';
-            $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
-            $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
+                // invoke CreateHIT
+                $CreateHITResponse = $turk50->CreateHIT($Request);
+        //      print_r($CreateHITResponse);                
+	            }else {
+                    $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+                	$mail->Subject = 'Your first HIT expired';
+                    $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
+                    $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
 		            if(!$mail->send()) {
-                echo 'Message could not be sent.';
-                echo 'Mailer Error: ' . $mail->ErrorInfo;
-            } else {
-                echo 'Message has been sent';
-            }
-
-		}
+                        echo 'Message could not be sent.';
+                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+                    } else {
+                        echo 'Message has been sent';
+                    }   
+    		    }
+		    }
         }else{
             $mail->Subject = 'Your first HIT expired';
             $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed comments. The URL was '.$postURL;
