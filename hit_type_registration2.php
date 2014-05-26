@@ -4,8 +4,6 @@
 
 // Creates a HitType and prints new ID
 
-        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
-
         // require Worker_PercentAssignmentsApproved >= 90%
         $Worker_PercentAssignmentsApproved = array(
          "QualificationTypeId" => "000000000000000000L0",

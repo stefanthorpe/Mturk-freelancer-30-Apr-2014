@@ -16,9 +16,7 @@
     $mail->From = 'stefan.thorpe@gmail.com';
     $mail->FromName = 'Stefan Thorpe';
     $mail->addAddress('stefan.thorpe@gmail.com');     // Add a recipient
-  
-    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
-    
+
     use Aws\Sqs\SqsClient;
     
     $client = SqsClient::factory(array(

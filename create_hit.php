@@ -16,9 +16,7 @@
         updateKey("AWSAccessKeyIdMturk");
         updateKey("AWSSecretAccessKeyIdMturk");
 
-        $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"]);
-
-        //prepare Question
+	 //prepare Question
         $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
         <Question>
             <QuestionIdentifier>Comment for'.$_POST["forumURL"].'</QuestionIdentifier>
