@@ -80,11 +80,9 @@
 	        $assignmentCount = 0;
     //      print_r($RegResponse);
 	        while ($assignmentCount < $totalNumAssignment) {
-	           if ($totalNumAssignment = 1){ 
-			        $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
-		        }else{
+	           if ($totalNumAssignment > 1){ 
 			         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
-		        }
+
 //                   print_r($xml);
 //	            $answer = explode(">",$assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
 		        $questionText .= "Comment ";
@@ -137,10 +135,23 @@
             // invoke CreateHIT
             $CreateHITResponse = $turk50->CreateHIT($Request);
     //      print_r($CreateHITResponse);
+	       }else {
+                                $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+            	            $mail->Subject = 'Your first HIT expired';
+            $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has only recieved one comment. The URL is'.$postURL.'The comment is'.$xml->Answer->FreeText;
+            $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
+		            if(!$mail->send()) {
+                echo 'Message could not be sent.';
+                echo 'Mailer Error: ' . $mail->ErrorInfo;
+            } else {
+                echo 'Message has been sent';
+            }
+
+		}
         }else{
             $mail->Subject = 'Your first HIT expired';
-            $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
-            $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
+            $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed comments. The URL was '.$postURL;
+            $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed comments. The URL was '.$postURL;
             if(!$mail->send()) {
                 echo 'Message could not be sent.';
                 echo 'Mailer Error: ' . $mail->ErrorInfo;
