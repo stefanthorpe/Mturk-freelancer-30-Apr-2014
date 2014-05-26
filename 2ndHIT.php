@@ -3,6 +3,21 @@
     include(__DIR__.'/aws-credentials.php');
     require(__DIR__.'/vendor/autoload.php');
     require(__DIR__.'/vendor/phpmailer/phpmailer/PHPMailerAutoload.php');
+  
+    $mail = new PHPMailer;
+    // $mail->SMTPDebug = 2;
+    $mail->isSMTP();                                     
+    $mail->Host = 'smtp.gmail.com';  
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = 'stefan.thorpe@gmail.com';                 // SMTP username
+    $mail->Password = $emailPassword;                           // SMTP password
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+    $mail->From = 'stefan.thorpe@gmail.com';
+    $mail->FromName = 'Stefan Thorpe';
+    $mail->addAddress('stefan.thorpe@gmail.com');     // Add a recipient
+  
+    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
     
     use Aws\Sqs\SqsClient;
     
@@ -26,39 +41,37 @@
 
     $resultArray = $result->toArray();
 //  print_r($resultArray);
-    echo "<br/>";
+//    echo "<br/>";
 	$receiptHandle = $resultArray['Messages'][0]['ReceiptHandle'];
 //  print_r($receiptHandle);
 
     $HITId = $decodedMessageBody->Events[0]->HITId;
     $MessageHITTypeId = $decodedMessageBody->Events[0]->HITTypeId;
-	echo "<br />";
-	print($MessageHITTypeId);
-echo "<br />";
-print($HITTypeId2);
-    $turk50 = new Turk50($keys["AWSAccessKeyIdMturk"], $keys["AWSSecretAccessKeyIdMturk"], array("trace" => TRUE));
+//	echo "<br />";
+//	print($MessageHITTypeId);
+//  echo "<br />";
+//  print($HITTypeId2);
+    
 
      //prepare Request
      $Request = array(
          "HITId" => $HITId
      );
 
-     $RegResponse = $turk50->GetAssignmentsForHIT($Request);
+    $HIT = $turk50->GetHIT($Request);
+    $postURL = $HIT->HIT->RequesterAnnotation;
+    
+    $assignmentResponse = $turk50->GetAssignmentsForHIT($Request);
 //	echo "<br />";
 //  print_r($RegResponse);
-//  echo "<br />";
 
 	if ($MessageHITTypeId == $HITTypeId1) {
-	echo "hit one loop";
-        // invoke CreateHIT
 
-        $totalNumResults = $RegResponse->GetAssignmentsForHITResult->TotalNumResults;
+        $totalNumAssignment =$assignmentResponse->GetAssignmentsForHITResult->TotalNumResults;
 
-        if ($totalNumResults > 0) {
-
-            //$splitComment = explode(" ", $RegResponse->GetAssignmentsForHITResult->Assignment[0]->Answer, 2);
+        if ($totalNumAssignment > 0) {
             
-            $questionText = 'These three choices are comments in response to the question written at this Traffic Planet forum page. Please choose which comment is the most RELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:
+            $questionText = '<p>The comments below are response to this post.<a href="'.$postURL.'">'.$postURL.'</a> Read the post, then choose which comment is the most RELEVANT to the topic and also sounds like the most NORMAL English with good grammarELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:<br />
                               ';
 	        $answerText = '<SelectionAnswer>
                           <StyleSuggestion>radiobutton</StyleSuggestion>
@@ -66,23 +79,22 @@ print($HITTypeId2);
                           ';
 	        $assignmentCount = 0;
     //      print_r($RegResponse);
-	        while ($assignmentCount < $totalNumResults) {
-	           if ($totalNumResults = 1){ 
-			$xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
-		}else{
-			 $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
-		}
-    //          print_r($xml);
-	            $answer = explode(">", $RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
+	        while ($assignmentCount < $totalNumAssignment) {
+	           if ($totalNumAssignment = 1){ 
+			        $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
+		        }else{
+			         $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer);
+		        }
+//                   print_r($xml);
+//	            $answer = explode(">",$assignmentResponse->GetAssignmentsForHITResult->Assignment[$assignmentCount]->Answer, 2);
 		        $questionText .= "Comment ";
 		        $questionText .= $assignmentCount + 1;
-		        $questionText .= ": " . $xml->Answer->FreeText;
-		        $questionText .= '
-                                     ';
+		        $questionText .= ":<br /> " . $xml->Answer->FreeText;
+		        $questionText .= '<br />';
                 $answerText .= '  <Selection>
                               <SelectionIdentifier>Comment';
 	            $answerText .= $assignmentCount + 1;
-		$answerText .= ": " . $xml->Answer->FreeText;
+		        $answerText .= ": " . $xml->Answer->FreeText;
                 $answerText .= '</SelectionIdentifier>
                               <Text>Comment ';
 	            $answerText .= $assignmentCount + 1;
@@ -102,9 +114,9 @@ print($HITTypeId2);
                     <DisplayName>Review Forum Comment</DisplayName>
                     <IsRequired>true</IsRequired>
                     <QuestionContent>
-                      <Text>
-                       '.$questionText.'
-                      </Text>
+                     FormattedContent><![CDATA[
+                       '.$questionText.'</p>
+                      ]]></FormattedContent>
                     </QuestionContent>
                     <AnswerSpecification>
                         '.$answerText.'
@@ -125,34 +137,33 @@ print($HITTypeId2);
             // invoke CreateHIT
             $CreateHITResponse = $turk50->CreateHIT($Request);
     //      print_r($CreateHITResponse);
-        };
-    } elseif($MessageHITTypeId == $HITTypeId2) {
+        }else{
+            $mail->Subject = 'Your first HIT expired';
+            $mail->Body    = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
+            $mail->AltBody = 'You are recieving this message because the mechanical turk HIT requesting comments has expired without any completed assignments. The URL was'.$postURL;
+            if(!$mail->send()) {
+                echo 'Message could not be sent.';
+                echo 'Mailer Error: ' . $mail->ErrorInfo;
+            } else {
+                echo 'Message has been sent';
+            }
+       }
+            
+    }elseif($MessageHITTypeId == $HITTypeId2) {
          $xml =simplexml_load_string($RegResponse->GetAssignmentsForHITResult->Assignment->Answer);
 //       print_r($xml);
-	$mail = new PHPMailer;
-// $mail->SMTPDebug = 2;
-$mail->isSMTP();                                     
-$mail->Host = 'smtp.gmail.com';  
-$mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'stefan.thorpe@gmail.com';                 // SMTP username
-$mail->Password = $emailPassword;                           // SMTP password
-$mail->Port = 587;
-$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
 
-$mail->From = 'stefan.thorpe@gmail.com';
-$mail->FromName = 'Stefan Thorpe';
-$mail->addAddress('stefan.thorpe@gmail.com');     // Add a recipient
 
-$mail->Subject = 'Here is the subject';
-$mail->Body    = 'The forum comment for ';
-$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+        $mail->Subject = 'New Comment For Forum';
+        $mail->Body    = 'The mechanical turk process has completed. The URL is '.$postURL.' . The selected comment is ' . $xml->Answer->FreeText;
+        $mail->AltBody = 'The mechanical turk process has completed. The URL is '.$postURL.' . The selected comment is ' . $xml->Answer->FreeText;
 
-if(!$mail->send()) {
-    echo 'Message could not be sent.';
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
-} else {
-    echo 'Message has been sent';
-}
+        if(!$mail->send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+            echo 'Message has been sent';
+        }
 	
     };
 
