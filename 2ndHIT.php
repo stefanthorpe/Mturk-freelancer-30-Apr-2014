@@ -69,7 +69,7 @@
 
         if ($totalNumAssignment > 0) {
             
-            $questionText = '<p>The comments below are response to this post.<a href="'.$postURL.'">'.$postURL.'</a> Read the post, then choose which comment is the most RELEVANT to the topic and also sounds like the most NORMAL English with good grammarELEVANT to the topic in the forum and also which sounds like the most NORMAL English with good grammar:<br />
+            $questionText = '<p>The comments below are in response to this post: <a href="'.$postURL.'">'.$postURL.'</a> Read the post, then choose which comment is the most RELEVANT to the post topic and also sounds like the most NORMAL English with good grammar. <br />
                               ';
 	        $answerText = '<SelectionAnswer>
                           <StyleSuggestion>radiobutton</StyleSuggestion>

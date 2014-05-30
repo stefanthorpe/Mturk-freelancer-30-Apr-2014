@@ -20,12 +20,12 @@
         $Question = '<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
         <Question>
             <QuestionIdentifier>Comment for'.$_POST["forumURL"].'</QuestionIdentifier>
-            <DisplayName>Comment Relating A Forum</DisplayName>
+            <DisplayName>Draft a comment for a forum/blog post</DisplayName>
             <IsRequired>true</IsRequired>
             <QuestionContent>
               <FormattedContent><![CDATA[
-                <p>I need someone to post a RELEVANT comment on this forum thread:<a href="'.$_POST["forumURL"].'">'.$_POST["forumURL"].'</a><br/>
-                Do not post anything short like "Great post!" or "I agree!" - this needs to be relevant content that a person on the forum would actually post.</p>
+                <p>I need someone to write a RELEVANT comment on this post: <a href="'.$_POST["forumURL"].'">'.$_POST["forumURL"].'</a><br/>
+                Do not write anything short like "Great post!" or "I agree!" - this needs to be relevant content that a reader would actually post.</p>
               ]]></FormattedContent>
             </QuestionContent>
             <AnswerSpecification>
